@@ -1,0 +1,8 @@
+#ifndef READPROCESS_H
+#define READPROCESS_H
+
+#endif // READPROCESS_H
+#include<QWidget>
+namespace name {
+
+}
