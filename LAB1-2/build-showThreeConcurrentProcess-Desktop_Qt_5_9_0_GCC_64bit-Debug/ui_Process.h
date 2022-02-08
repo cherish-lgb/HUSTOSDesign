@@ -41,10 +41,10 @@ public:
     {
         if (Process->objectName().isEmpty())
             Process->setObjectName(QStringLiteral("Process"));
-        Process->resize(799, 423);
+        Process->resize(361, 242);
         layoutWidget = new QWidget(Process);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(210, 100, 321, 201));
+        layoutWidget->setGeometry(QRect(20, 20, 321, 201));
         verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -55,6 +55,7 @@ public:
         horizontalLayout_1->setObjectName(QStringLiteral("horizontalLayout_1"));
         label_1 = new QLabel(layoutWidget);
         label_1->setObjectName(QStringLiteral("label_1"));
+        label_1->setTextFormat(Qt::PlainText);
 
         horizontalLayout_1->addWidget(label_1);
 

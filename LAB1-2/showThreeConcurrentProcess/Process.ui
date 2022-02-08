@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>423</height>
+    <width>361</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>100</y>
+     <x>20</x>
+     <y>20</y>
      <width>321</width>
      <height>201</height>
     </rect>
@@ -29,6 +29,9 @@
        <widget class="QLabel" name="label_1">
         <property name="text">
          <string>当前进程pid:</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::PlainText</enum>
         </property>
        </widget>
       </item>
