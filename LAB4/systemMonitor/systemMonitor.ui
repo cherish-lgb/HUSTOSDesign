@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>systemMonitor</class>
+ <widget class="QMainWindow" name="systemMonitor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>949</width>
+    <height>532</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Process</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>851</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <widget class="QWidget" name="Process">
+     <attribute name="title">
+      <string>Process</string>
+     </attribute>
+     <widget class="QPushButton" name="shutDownProcess">
+      <property name="geometry">
+       <rect>
+        <x>690</x>
+        <y>440</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>shut Down Process </string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidgetProcess">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>41</y>
+        <width>651</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="Total">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>100</y>
+        <width>67</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Total:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="setTotal">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>100</y>
+        <width>67</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>setTotal</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="Performance">
+     <attribute name="title">
+      <string>Performance</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>821</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Memory Usage</string>
+      </property>
+      <widget class="QProgressBar" name="memoryUsage">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>821</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="memoryTotal">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>101</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>memoryTotal</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setMemoryTotal">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>130</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setMemoryTotal</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="memoryUsed">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>130</y>
+         <width>101</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>memoryUsed</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setMemoryUsed">
+       <property name="geometry">
+        <rect>
+         <x>590</x>
+         <y>130</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setMemoryUsed</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>230</y>
+        <width>821</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>CPU Usage</string>
+      </property>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>821</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="systemInformation">
+     <attribute name="title">
+      <string>systemInformation</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>771</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>System Information</string>
+      </property>
+      <widget class="QLabel" name="hostName">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>81</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>hostName:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="runingTime">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>120</y>
+         <width>91</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>runningTime</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="version">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>81</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>version</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setHostName">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>40</y>
+         <width>391</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setHostName</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setRunningTime">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>120</y>
+         <width>391</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setRunningTime</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setVersion">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>160</y>
+         <width>391</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setVersion</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="startRunTime">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>80</y>
+         <width>111</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>startRunTime</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setStartRunTime">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>80</y>
+         <width>381</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setStartRunTime</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>771</width>
+        <height>211</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>CPU Information</string>
+      </property>
+      <widget class="QLabel" name="numberOfCores">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>121</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Number of cores</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="CPUType">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>100</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>CPUType</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="Hz">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::VLine</enum>
+       </property>
+       <property name="text">
+        <string>Hz</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setNumberOfCores">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>40</y>
+         <width>381</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setNumberOfCores</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setCPUType">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>100</y>
+         <width>391</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setCPUType</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="setDominantFrequency">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>160</y>
+         <width>401</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>setDominantFrequency</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
