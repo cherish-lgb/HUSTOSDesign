@@ -14,7 +14,10 @@
 #include<sstream>
 #include<fstream>
 #include<unistd.h>
+#include<QSet>
+#include<QMap>
 #include<QMainWindow>
+#include<string>
 namespace Ui {
 class systemMonitor;
 }
@@ -23,6 +26,9 @@ class systemMonitor: public QMainWindow{
 private:
     Ui::systemMonitor* ui;
     QTimer* timer;
+    QMap<QString , QListWidgetItem*>map;
+    QMap<QString , QString>mapString;
+    QSet<QString>set;
     void updateProc(int pid);
 
     void updateCPUUsage();
@@ -39,11 +45,20 @@ private:
 
     void showStartTime();
 
-    void processOpenFileError();
+    void processOpenFileError(std::string str = "The file can not open!");
+
+    void updateCurrentTime();
+
+    void processInputIsNotInt();
+
+    bool checkQStringIsInteger(QString& s);
 public:
     explicit systemMonitor(QMainWindow* parent1 = nullptr);
 public slots:
     void updateUsage();
+    void clickShutDownProcess();
+    void clickFindProcess();
+    void clickShutDown();
 };
 
 #endif // SYSTEMMONITOR_H

@@ -21,6 +21,7 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -35,6 +36,9 @@ public:
     QListWidget *listWidgetProcess;
     QLabel *Total;
     QLabel *setTotal;
+    QTextEdit *inputPIDToFind;
+    QPushButton *findProcess;
+    QTextEdit *inputPIDToShutDown;
     QWidget *Performance;
     QGroupBox *groupBox_3;
     QProgressBar *memoryUsage;
@@ -43,7 +47,9 @@ public:
     QLabel *memoryUsed;
     QLabel *setMemoryUsed;
     QGroupBox *groupBox_4;
-    QProgressBar *progressBar;
+    QProgressBar *setCPUUsage;
+    QGroupBox *groupBox_5;
+    QLabel *setCurrentTime;
     QWidget *systemInformation;
     QGroupBox *groupBox;
     QLabel *hostName;
@@ -61,17 +67,18 @@ public:
     QLabel *setNumberOfCores;
     QLabel *setCPUType;
     QLabel *setDominantFrequency;
+    QPushButton *shutDown;
 
     void setupUi(QMainWindow *systemMonitor)
     {
         if (systemMonitor->objectName().isEmpty())
             systemMonitor->setObjectName(QStringLiteral("systemMonitor"));
-        systemMonitor->resize(949, 532);
+        systemMonitor->resize(966, 586);
         centralWidget = new QWidget(systemMonitor);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 10, 851, 521));
+        tabWidget->setGeometry(QRect(10, 10, 851, 561));
         Process = new QWidget();
         Process->setObjectName(QStringLiteral("Process"));
         shutDownProcess = new QPushButton(Process);
@@ -86,6 +93,15 @@ public:
         setTotal = new QLabel(Process);
         setTotal->setObjectName(QStringLiteral("setTotal"));
         setTotal->setGeometry(QRect(760, 100, 67, 17));
+        inputPIDToFind = new QTextEdit(Process);
+        inputPIDToFind->setObjectName(QStringLiteral("inputPIDToFind"));
+        inputPIDToFind->setGeometry(QRect(20, 430, 171, 41));
+        findProcess = new QPushButton(Process);
+        findProcess->setObjectName(QStringLiteral("findProcess"));
+        findProcess->setGeometry(QRect(210, 440, 111, 25));
+        inputPIDToShutDown = new QTextEdit(Process);
+        inputPIDToShutDown->setObjectName(QStringLiteral("inputPIDToShutDown"));
+        inputPIDToShutDown->setGeometry(QRect(520, 430, 141, 41));
         tabWidget->addTab(Process, QString());
         Performance = new QWidget();
         Performance->setObjectName(QStringLiteral("Performance"));
@@ -111,10 +127,16 @@ public:
         groupBox_4 = new QGroupBox(Performance);
         groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
         groupBox_4->setGeometry(QRect(20, 230, 821, 161));
-        progressBar = new QProgressBar(groupBox_4);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(0, 20, 821, 81));
-        progressBar->setValue(24);
+        setCPUUsage = new QProgressBar(groupBox_4);
+        setCPUUsage->setObjectName(QStringLiteral("setCPUUsage"));
+        setCPUUsage->setGeometry(QRect(0, 20, 821, 81));
+        setCPUUsage->setValue(24);
+        groupBox_5 = new QGroupBox(Performance);
+        groupBox_5->setObjectName(QStringLiteral("groupBox_5"));
+        groupBox_5->setGeometry(QRect(20, 400, 821, 80));
+        setCurrentTime = new QLabel(groupBox_5);
+        setCurrentTime->setObjectName(QStringLiteral("setCurrentTime"));
+        setCurrentTime->setGeometry(QRect(20, 30, 801, 41));
         tabWidget->addTab(Performance, QString());
         systemInformation = new QWidget();
         systemInformation->setObjectName(QStringLiteral("systemInformation"));
@@ -171,11 +193,14 @@ public:
         setDominantFrequency->setObjectName(QStringLiteral("setDominantFrequency"));
         setDominantFrequency->setGeometry(QRect(350, 160, 401, 17));
         tabWidget->addTab(systemInformation, QString());
+        shutDown = new QPushButton(centralWidget);
+        shutDown->setObjectName(QStringLiteral("shutDown"));
+        shutDown->setGeometry(QRect(870, 530, 89, 25));
         systemMonitor->setCentralWidget(centralWidget);
 
         retranslateUi(systemMonitor);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(systemMonitor);
@@ -187,6 +212,7 @@ public:
         shutDownProcess->setText(QApplication::translate("systemMonitor", "shut Down Process ", Q_NULLPTR));
         Total->setText(QApplication::translate("systemMonitor", "Total:", Q_NULLPTR));
         setTotal->setText(QApplication::translate("systemMonitor", "setTotal", Q_NULLPTR));
+        findProcess->setText(QApplication::translate("systemMonitor", "Find Process", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(Process), QApplication::translate("systemMonitor", "Process", Q_NULLPTR));
         groupBox_3->setTitle(QApplication::translate("systemMonitor", "Memory Usage", Q_NULLPTR));
         memoryTotal->setText(QApplication::translate("systemMonitor", "memoryTotal", Q_NULLPTR));
@@ -194,6 +220,8 @@ public:
         memoryUsed->setText(QApplication::translate("systemMonitor", "memoryUsed", Q_NULLPTR));
         setMemoryUsed->setText(QApplication::translate("systemMonitor", "setMemoryUsed", Q_NULLPTR));
         groupBox_4->setTitle(QApplication::translate("systemMonitor", "CPU Usage", Q_NULLPTR));
+        groupBox_5->setTitle(QApplication::translate("systemMonitor", "Current Time", Q_NULLPTR));
+        setCurrentTime->setText(QApplication::translate("systemMonitor", "setCurrentTime", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(Performance), QApplication::translate("systemMonitor", "Performance", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("systemMonitor", "System Information", Q_NULLPTR));
         hostName->setText(QApplication::translate("systemMonitor", "hostName:", Q_NULLPTR));
@@ -212,6 +240,7 @@ public:
         setCPUType->setText(QApplication::translate("systemMonitor", "setCPUType", Q_NULLPTR));
         setDominantFrequency->setText(QApplication::translate("systemMonitor", "setDominantFrequency", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(systemInformation), QApplication::translate("systemMonitor", "systemInformation", Q_NULLPTR));
+        shutDown->setText(QApplication::translate("systemMonitor", "Shut Down", Q_NULLPTR));
     } // retranslateUi
 
 };

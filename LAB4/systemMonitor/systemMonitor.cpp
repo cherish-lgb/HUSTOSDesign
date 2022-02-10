@@ -4,14 +4,25 @@
 #include<sys/sysinfo.h>
 #include<time.h>
 #include<errno.h>
+#include<string>
+#include<vector>
+using std::stringstream;
+using std::string;
+using std::vector;
 using std::cout;
 using std::endl;
+using std::cin;
 systemMonitor::systemMonitor(QMainWindow* parent1):QMainWindow(parent1), ui(new Ui::systemMonitor){
     ui->setupUi(this);
     timer = new QTimer(this);
     showStartTime();
+    QString information = "PID\tPPID\tName\t\t\t\tStat\tPriority\tMemoryUsage";
+    new QListWidgetItem(information , ui->listWidgetProcess);
     connect(timer , SIGNAL(timeout()) , this , SLOT(updateUsage()));
-    timer->start(1);
+    connect(ui->shutDownProcess , SIGNAL(clicked()) , this , SLOT(clickShutDownProcess()));
+    connect(ui->shutDown , SIGNAL(clicked()) , this , SLOT(clickShutDown()));
+    connect(ui->findProcess , SIGNAL(clicked()) , this , SLOT(clickFindProcess()));
+    timer->start(10);
 }
 
 void systemMonitor::updateUsage(){
@@ -21,10 +32,89 @@ void systemMonitor::updateUsage(){
     updateMemoryUsage();
     updateCPUInformation();
     updateProcess();
+    updateCurrentTime();
+    return ;
 
 }
-void systemMonitor::processOpenFileError(){
-    QMessageBox::warning(this , tr("warning") , tr("The stat file can not open!"),QMessageBox::Yes);
+void systemMonitor::processInputIsNotInt(){
+    QMessageBox::warning(this , tr("warning") , tr("The input is not a integer!"),QMessageBox::Yes);
+    return ;
+}
+bool systemMonitor::checkQStringIsInteger(QString &s){
+    string str = s.trimmed().toStdString();
+    for(auto c : str){
+        if(c < '0' || c > '9') return false;
+    }
+    return true;
+}
+
+void systemMonitor::clickShutDownProcess(){
+    QString inputInteger = ui->inputPIDToShutDown->toPlainText();
+    if(!checkQStringIsInteger(inputInteger)){
+        processInputIsNotInt();
+        return ;
+    }
+    int pid = inputInteger.trimmed().toInt();
+    string killCommend = "kill -l " + std::to_string(pid);
+    system(killCommend.data());
+    return ;
+}
+
+void systemMonitor::clickFindProcess(){
+    QString inputInteger = ui->inputPIDToFind->toPlainText();
+    if(!checkQStringIsInteger(inputInteger)){
+        processInputIsNotInt();
+        return ;
+    }
+    int pid = inputInteger.trimmed().toInt();
+    cout << pid << endl;
+    QFile qFile;
+    qFile.setFileName("/proc/" + QString::number(pid , 10) + "/stat");
+    if(!qFile.open(QIODevice::ReadOnly)){
+        processOpenFileError();
+        return ;
+    }
+    QString s = qFile.readLine();
+    if(s.size() == 0) return;
+    s.replace('(' , ' ');
+    stringstream text(s.toStdString());
+    string t;
+    text >> t;
+    QString processName;//1
+    while(true){
+        text >> t;
+        bool check = false;
+        if(t.back() == ')'){
+            check = true;
+            t.pop_back();
+        }
+        processName.append(QString::fromStdString(t));
+        if(check) break;
+    }
+    text >> t;
+    QString processState = QString::fromStdString(t);//2
+    text >> t;
+    QString ppidOfProcess = QString::fromStdString(t);//3
+    for(int i = 1 ; i <= 14 ; ++i) text >> t;
+    QString processPriority = QString::fromStdString(t);//17
+    for(int i = 1 ; i <= 5 ; ++i) text >> t;
+    QString processMemory = QString::fromStdString(t);//22
+    while(processName.length() < 60) processName.append(' ');
+    QString res = "PID: " + QString::number(pid , 10) + "\n" + "PPID: " + ppidOfProcess +
+            "\n" + "Process Name: " + processName + "\n" + "ProcessState: " + processState + "\n" +
+            "Process Priority: " + processPriority + "\n" + "ProcessMemory: " + processMemory;
+    qFile.close();
+    QMessageBox::information(this , tr("Process Information") , tr(res.toStdString().data()),QMessageBox::Yes);
+    return ;
+}
+
+void systemMonitor::clickShutDown(){
+    system("shutdown -h now");
+    return ;
+}
+
+void systemMonitor::processOpenFileError(std::string str){
+    QMessageBox::warning(this , tr("warning") , tr(str.data()),QMessageBox::Yes);
     return ;
 }
 void systemMonitor::updateSystemMessage(){
@@ -69,10 +159,11 @@ void systemMonitor::showStartTime(){
     else bootTime = info.uptime - curTime;
     ptm = gmtime(&bootTime);
     QString s = QString::number(ptm->tm_year + 1900 , 10) + " years " +
-            QString::number(ptm->tm_mon + 1 , 10) + " month " +
-            QString::number(ptm->tm_mday , 10) + " hours " +
-             QString::number(ptm->tm_min , 10) + " minutes " +
-             QString::number(ptm->tm_sec , 10) + " seconds";
+                QString::number(ptm->tm_mon + 1 , 10) + " month " +
+                QString::number(ptm->tm_mday , 10) + " days " +
+                QString::number((ptm->tm_hour+8 ) % 24 , 10) + " hours " +
+                QString::number(ptm->tm_min , 10) + " minutes " +
+                QString::number(ptm->tm_sec , 10) + " seconds";
     ui->setStartRunTime->setText(s);
 }
 
@@ -137,15 +228,123 @@ void systemMonitor::updateCPUInformation(){
     return ;
 }
 
-void systemMonitor::updateCPUUsage(){
 
+void systemMonitor::updateCPUUsage(){
+    QFile qFile;
+    qFile.setFileName("/proc/stat");
+    if(!qFile.open(QIODevice::ReadOnly)){
+        processOpenFileError();
+        return ;
+    }
+    vector<vector<int>>cpuTime(4 , vector<int>(7 , 0));
+    for(int i = 0 ; i < 4 ; ++i){
+        QString s = qFile.readLine();
+        string t = s.toStdString();
+        stringstream text(t);
+        text >> t;
+        for(int j = 0 ; j < 7 ; ++j){
+            text >> t;
+            s = QString::fromStdString(t);
+            cpuTime[i][j] = s.trimmed().toInt();
+        }
+    }
+    long long totalCPUTime = 0 , totalFreeCPUTime = 0;
+    for(int i = 0 ; i < 4 ; ++i){
+        for(int j = 0 ; j < 7 ; ++j) totalCPUTime += cpuTime[i][j];
+        totalFreeCPUTime += cpuTime[i][3];
+    }
+    double myCPUUsage = 1 - 1.0 * totalFreeCPUTime / totalCPUTime;
+    ui->setCPUUsage->setValue(myCPUUsage * 100);
+    qFile.close();
+    return ;
 }
 
 void systemMonitor::updateProcess(){
+    QFile qFile;
+    QDir qDir("/proc");
+    QStringList qStringList = qDir.entryList();
+    QString qString = qStringList.join("\n");
+    int find_start = 3;
+    QMap<QString , QString>qMap;
+    while(true){
+        int a = qString.indexOf("\n" , find_start);
+        int b = qString.indexOf("\n" , a + 1);
+        find_start = b;
+        QString pidOfProcess = qString.mid(a + 1 , b - a - 1);//0
+        bool check = true;
+        int pid = pidOfProcess.toInt(&check , 10);
+        pidOfProcess = QString::number(pid , 10);
+        if(!check) break;
+        qFile.setFileName("/proc/" + pidOfProcess + "/stat");
+        if(!qFile.open(QIODevice::ReadOnly)){
+            processOpenFileError();
+            return ;
+        }
+        QString s = qFile.readLine();
+        if(s.size() == 0) break;
+        s.replace('(' , ' ');
+        stringstream text(s.toStdString());
+        string t;
+        text >> t;
+        QString processName;//1
+        while(true){
+            text >> t;
+            check = false;
+            if(t.back() == ')'){
+                check = true;
+                t.pop_back();
+            }
+            processName.append(QString::fromStdString(t));
+            if(check) break;
+        }
+        text >> t;
+        QString processState = QString::fromStdString(t);//2
+        text >> t;
+        QString ppidOfProcess = QString::fromStdString(t);//3
+        for(int i = 1 ; i <= 14 ; ++i) text >> t;
+        QString processPriority = QString::fromStdString(t);//17
+        for(int i = 1 ; i <= 5 ; ++i) text >> t;
+        QString processMemory = QString::fromStdString(t);//22
+        while(processName.length() < 60) processName.append(' ');
+        QString res = pidOfProcess + "\t" + ppidOfProcess + "\t" + processName + "\t" + processState + "\t" + processPriority + "\t" + processMemory;
+        qMap[processName.trimmed()] = res;
+        qFile.close();
+    }
 
+    for(auto item  = qMap.begin(); item != qMap.end() ; ++item){
+        if(mapString.count(item.key()) == 1 && mapString[item.key()] == item.value())  continue;
+        if(map.count(item.key()) == 1) {
+            int index = ui->listWidgetProcess->row(map[item.key()]);
+            ui->listWidgetProcess->takeItem(index);
+        }
+        map[item.key()] = new QListWidgetItem(item.value() , ui->listWidgetProcess);
+    }
+    for(auto item = mapString.begin() ; item != mapString.end() ; ++item){
+        if(qMap.count(item.key())) continue;
+        int index = ui->listWidgetProcess->row(map[item.key()]);
+        ui->listWidgetProcess->takeItem(index);
+        map.remove(item.key());
+    }
+    mapString = qMap;
+    int totalProcess = map.size();
+    ui->setTotal->setText(QString::number(totalProcess , 10));
+    return ;
 }
-void systemMonitor::updateProc(int pid){
 
+void systemMonitor::updateCurrentTime(){
+    time_t curTime = 0;
+    struct tm* ptm = nullptr;
+    time(&curTime);
+    ptm = gmtime(&curTime);
+
+    QString s = QString::number(ptm->tm_year + 1900 , 10) + " years " +
+                QString::number(ptm->tm_mon + 1 , 10) + " month " +
+                QString::number(ptm->tm_mday , 10) + " days " +
+                QString::number((ptm->tm_hour+8 ) % 24 , 10) + " hours " +
+                QString::number(ptm->tm_min , 10) + " minutes " +
+                QString::number(ptm->tm_sec , 10) + " seconds";
+    ui->setCurrentTime->setText(s);
+    return ;
 }
 
 
