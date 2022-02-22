@@ -18,6 +18,8 @@
 #include<QMap>
 #include<QMainWindow>
 #include<string>
+#include<QtCharts>
+#include<QChartView>
 namespace Ui {
 class systemMonitor;
 }
@@ -29,6 +31,19 @@ private:
     QMap<QString , QListWidgetItem*>map;
     QMap<QString , QString>mapString;
     QSet<QString>set;
+    QChart* CPUQchart;
+    QChartView* CPUChartView;
+    QChart* MemoryQchart;
+    QChartView* MemoryChartView;
+    QValueAxis* CPUAxisX;
+    QValueAxis* CPUAxisY;
+    QValueAxis* MemoryAxisX;
+    QValueAxis* MemoryAxisY;
+    QSplineSeries* CPUSeries;
+    QSplineSeries* MemorySeries;
+    QList<double>CPUYList , MemoryYList;
+    const int MAXN = 120;
+    int CNTCPU , CNTMemory;
     void updateProc(int pid);
 
     void updateCPUUsage();
@@ -52,6 +67,12 @@ private:
     void processInputIsNotInt();
 
     bool checkQStringIsInteger(QString& s);
+
+    void updateCPUUsageCurve(double val);
+
+    void updateMemoryUsageCurve(double val);
+
+    void initCurve();
 public:
     explicit systemMonitor(QMainWindow* parent1 = nullptr);
 public slots:

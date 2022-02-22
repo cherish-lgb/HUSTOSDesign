@@ -14,6 +14,7 @@ using std::endl;
 using std::cin;
 systemMonitor::systemMonitor(QMainWindow* parent1):QMainWindow(parent1), ui(new Ui::systemMonitor){
     ui->setupUi(this);
+    initCurve();
     timer = new QTimer(this);
     showStartTime();
     QString information = "PID\tPPID\tName\t\t\t\tStat\tPriority\tMemoryUsage";
@@ -23,6 +24,44 @@ systemMonitor::systemMonitor(QMainWindow* parent1):QMainWindow(parent1), ui(new 
     connect(ui->shutDown , SIGNAL(clicked()) , this , SLOT(clickShutDown()));
     connect(ui->findProcess , SIGNAL(clicked()) , this , SLOT(clickFindProcess()));
     timer->start(10);
+}
+void systemMonitor::initCurve(){
+    CPUQchart = new QChart();
+    CPUChartView = new QChartView(this);
+    CPUAxisX = new QValueAxis();
+    CPUAxisY = new QValueAxis();
+    CPUQchart->addAxis(CPUAxisX , Qt::AlignBottom);
+    CPUQchart->addAxis(CPUAxisY , Qt::AlignLeft);
+    CPUAxisX->setTickCount(5);
+    CPUAxisX->setRange(0 , MAXN);
+    CPUAxisY->setTickCount(2);
+    CPUAxisY->setRange(0 , 100);
+    CPUSeries = new QSplineSeries(this);
+    CPUQchart->addSeries(CPUSeries);
+    CPUQchart->setTitle("CPU Usage Curve");
+    CPUSeries->attachAxis(CPUAxisX);
+    CPUSeries->attachAxis(CPUAxisY);
+    CPUChartView->setChart(CPUQchart);
+    ui->setCPUUsagesCurve->addWidget(CPUChartView);
+    CNTCPU = 0;
+    MemoryQchart = new QChart();
+    MemoryChartView = new QChartView(this);
+    MemoryAxisX = new QValueAxis();
+    MemoryAxisY = new QValueAxis();
+    MemoryQchart->addAxis(MemoryAxisX , Qt::AlignBottom);
+    MemoryQchart->addAxis(MemoryAxisY , Qt::AlignLeft);
+    MemoryAxisX->setTickCount(5);
+    MemoryAxisX->setRange(0 , MAXN);
+    MemoryAxisY->setTickCount(2);
+    MemoryAxisY->setRange(0 , 100);
+    MemorySeries = new QSplineSeries(this);
+    MemoryQchart->addSeries(MemorySeries);
+    MemoryQchart->setTitle("Memory Usage Curve");
+    MemorySeries->attachAxis(MemoryAxisX);
+    MemorySeries->attachAxis(MemoryAxisY);
+    MemoryChartView->setChart(MemoryQchart);
+    ui->setMemoryUsageCurve->addWidget(MemoryChartView);
+    CNTMemory = 0;
 }
 
 void systemMonitor::updateUsage(){
@@ -200,7 +239,19 @@ void systemMonitor::updateMemoryUsage(){
     double used = total - cal(s)/1024.0/1024.0;
     ui->setMemoryUsed->setText(QString::number(used , 'f' , 1) + " GB");
     ui->memoryUsage->setValue(used * 100 / total);
+
+    updateMemoryUsageCurve(used * 100.0 / total);
     qFile.close();
+}
+void systemMonitor::updateMemoryUsageCurve(double val){
+    if(CNTMemory == 0) MemoryYList.append(val);
+    CNTMemory = (CNTMemory + 1) % 100;
+    if(MemoryYList.length() > MAXN) MemoryYList.removeFirst();
+    QList<QPointF>points;
+    points.clear();
+    for(int i = 0 ; i < MemoryYList.length() ; ++i) points.append(QPointF(i , MemoryYList.at(i)));
+    MemorySeries->replace(points);
+    return ;
 }
 
 void systemMonitor::updateCPUInformation(){
@@ -255,7 +306,19 @@ void systemMonitor::updateCPUUsage(){
     }
     double myCPUUsage = 1 - 1.0 * totalFreeCPUTime / totalCPUTime;
     ui->setCPUUsage->setValue(myCPUUsage * 100);
+
+    updateCPUUsageCurve(myCPUUsage * 100);
     qFile.close();
+    return ;
+}
+void systemMonitor::updateCPUUsageCurve(double val){
+    if(CNTCPU == 0) CPUYList.append(val);
+    CNTCPU = (CNTCPU + 1) % 100;
+    if(CPUYList.length() > MAXN) CPUYList.removeFirst();
+    QList<QPointF>points;
+    points.clear();
+    for(int i = 0 ; i < CPUYList.length() ; ++i) points.append(QPointF(i , CPUYList.at(i)));
+    CPUSeries->replace(points);
     return ;
 }
 

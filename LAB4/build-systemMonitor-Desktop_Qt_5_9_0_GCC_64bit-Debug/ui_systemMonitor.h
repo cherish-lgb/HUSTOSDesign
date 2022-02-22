@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +40,7 @@ public:
     QTextEdit *inputPIDToFind;
     QPushButton *findProcess;
     QTextEdit *inputPIDToShutDown;
+    QPushButton *shutDown;
     QWidget *Performance;
     QGroupBox *groupBox_3;
     QProgressBar *memoryUsage;
@@ -63,11 +65,18 @@ public:
     QGroupBox *groupBox_2;
     QLabel *numberOfCores;
     QLabel *CPUType;
-    QLabel *Hz;
     QLabel *setNumberOfCores;
     QLabel *setCPUType;
     QLabel *setDominantFrequency;
-    QPushButton *shutDown;
+    QLabel *Hz;
+    QWidget *tab;
+    QGroupBox *groupBox_6;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *setCPUUsagesCurve;
+    QWidget *tab_2;
+    QGroupBox *groupBox_7;
+    QWidget *verticalLayoutWidget_2;
+    QVBoxLayout *setMemoryUsageCurve;
 
     void setupUi(QMainWindow *systemMonitor)
     {
@@ -78,12 +87,12 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 10, 851, 561));
+        tabWidget->setGeometry(QRect(10, 10, 951, 561));
         Process = new QWidget();
         Process->setObjectName(QStringLiteral("Process"));
         shutDownProcess = new QPushButton(Process);
         shutDownProcess->setObjectName(QStringLiteral("shutDownProcess"));
-        shutDownProcess->setGeometry(QRect(690, 440, 141, 21));
+        shutDownProcess->setGeometry(QRect(790, 440, 141, 21));
         listWidgetProcess = new QListWidget(Process);
         listWidgetProcess->setObjectName(QStringLiteral("listWidgetProcess"));
         listWidgetProcess->setGeometry(QRect(15, 41, 651, 371));
@@ -92,7 +101,7 @@ public:
         Total->setGeometry(QRect(680, 100, 67, 17));
         setTotal = new QLabel(Process);
         setTotal->setObjectName(QStringLiteral("setTotal"));
-        setTotal->setGeometry(QRect(760, 100, 67, 17));
+        setTotal->setGeometry(QRect(850, 100, 67, 17));
         inputPIDToFind = new QTextEdit(Process);
         inputPIDToFind->setObjectName(QStringLiteral("inputPIDToFind"));
         inputPIDToFind->setGeometry(QRect(20, 430, 171, 41));
@@ -102,6 +111,9 @@ public:
         inputPIDToShutDown = new QTextEdit(Process);
         inputPIDToShutDown->setObjectName(QStringLiteral("inputPIDToShutDown"));
         inputPIDToShutDown->setGeometry(QRect(520, 430, 141, 41));
+        shutDown = new QPushButton(Process);
+        shutDown->setObjectName(QStringLiteral("shutDown"));
+        shutDown->setGeometry(QRect(840, 500, 89, 25));
         tabWidget->addTab(Process, QString());
         Performance = new QWidget();
         Performance->setObjectName(QStringLiteral("Performance"));
@@ -176,13 +188,6 @@ public:
         CPUType = new QLabel(groupBox_2);
         CPUType->setObjectName(QStringLiteral("CPUType"));
         CPUType->setGeometry(QRect(20, 100, 67, 17));
-        Hz = new QLabel(groupBox_2);
-        Hz->setObjectName(QStringLiteral("Hz"));
-        Hz->setGeometry(QRect(20, 160, 111, 21));
-        QFont font;
-        font.setKerning(true);
-        Hz->setFont(font);
-        Hz->setFrameShape(QFrame::VLine);
         setNumberOfCores = new QLabel(groupBox_2);
         setNumberOfCores->setObjectName(QStringLiteral("setNumberOfCores"));
         setNumberOfCores->setGeometry(QRect(350, 40, 381, 17));
@@ -192,10 +197,38 @@ public:
         setDominantFrequency = new QLabel(groupBox_2);
         setDominantFrequency->setObjectName(QStringLiteral("setDominantFrequency"));
         setDominantFrequency->setGeometry(QRect(350, 160, 401, 17));
+        Hz = new QLabel(groupBox_2);
+        Hz->setObjectName(QStringLiteral("Hz"));
+        Hz->setGeometry(QRect(20, 160, 67, 17));
         tabWidget->addTab(systemInformation, QString());
-        shutDown = new QPushButton(centralWidget);
-        shutDown->setObjectName(QStringLiteral("shutDown"));
-        shutDown->setGeometry(QRect(870, 530, 89, 25));
+        tab = new QWidget();
+        tab->setObjectName(QStringLiteral("tab"));
+        groupBox_6 = new QGroupBox(tab);
+        groupBox_6->setObjectName(QStringLiteral("groupBox_6"));
+        groupBox_6->setGeometry(QRect(20, 10, 811, 481));
+        verticalLayoutWidget = new QWidget(groupBox_6);
+        verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
+        verticalLayoutWidget->setGeometry(QRect(10, 30, 791, 441));
+        setCPUUsagesCurve = new QVBoxLayout(verticalLayoutWidget);
+        setCPUUsagesCurve->setSpacing(6);
+        setCPUUsagesCurve->setContentsMargins(11, 11, 11, 11);
+        setCPUUsagesCurve->setObjectName(QStringLiteral("setCPUUsagesCurve"));
+        setCPUUsagesCurve->setContentsMargins(0, 0, 0, 0);
+        tabWidget->addTab(tab, QString());
+        tab_2 = new QWidget();
+        tab_2->setObjectName(QStringLiteral("tab_2"));
+        groupBox_7 = new QGroupBox(tab_2);
+        groupBox_7->setObjectName(QStringLiteral("groupBox_7"));
+        groupBox_7->setGeometry(QRect(0, 10, 841, 481));
+        verticalLayoutWidget_2 = new QWidget(groupBox_7);
+        verticalLayoutWidget_2->setObjectName(QStringLiteral("verticalLayoutWidget_2"));
+        verticalLayoutWidget_2->setGeometry(QRect(9, 29, 821, 441));
+        setMemoryUsageCurve = new QVBoxLayout(verticalLayoutWidget_2);
+        setMemoryUsageCurve->setSpacing(6);
+        setMemoryUsageCurve->setContentsMargins(11, 11, 11, 11);
+        setMemoryUsageCurve->setObjectName(QStringLiteral("setMemoryUsageCurve"));
+        setMemoryUsageCurve->setContentsMargins(0, 0, 0, 0);
+        tabWidget->addTab(tab_2, QString());
         systemMonitor->setCentralWidget(centralWidget);
 
         retranslateUi(systemMonitor);
@@ -213,6 +246,7 @@ public:
         Total->setText(QApplication::translate("systemMonitor", "Total:", Q_NULLPTR));
         setTotal->setText(QApplication::translate("systemMonitor", "setTotal", Q_NULLPTR));
         findProcess->setText(QApplication::translate("systemMonitor", "Find Process", Q_NULLPTR));
+        shutDown->setText(QApplication::translate("systemMonitor", "Shut Down", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(Process), QApplication::translate("systemMonitor", "Process", Q_NULLPTR));
         groupBox_3->setTitle(QApplication::translate("systemMonitor", "Memory Usage", Q_NULLPTR));
         memoryTotal->setText(QApplication::translate("systemMonitor", "memoryTotal", Q_NULLPTR));
@@ -235,12 +269,15 @@ public:
         groupBox_2->setTitle(QApplication::translate("systemMonitor", "CPU Information", Q_NULLPTR));
         numberOfCores->setText(QApplication::translate("systemMonitor", "Number of cores", Q_NULLPTR));
         CPUType->setText(QApplication::translate("systemMonitor", "CPUType", Q_NULLPTR));
-        Hz->setText(QApplication::translate("systemMonitor", "Hz", Q_NULLPTR));
         setNumberOfCores->setText(QApplication::translate("systemMonitor", "setNumberOfCores", Q_NULLPTR));
         setCPUType->setText(QApplication::translate("systemMonitor", "setCPUType", Q_NULLPTR));
         setDominantFrequency->setText(QApplication::translate("systemMonitor", "setDominantFrequency", Q_NULLPTR));
+        Hz->setText(QApplication::translate("systemMonitor", "Hz", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(systemInformation), QApplication::translate("systemMonitor", "systemInformation", Q_NULLPTR));
-        shutDown->setText(QApplication::translate("systemMonitor", "Shut Down", Q_NULLPTR));
+        groupBox_6->setTitle(QApplication::translate("systemMonitor", "CPUUsageCurve", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("systemMonitor", "CPUUsageCurve", Q_NULLPTR));
+        groupBox_7->setTitle(QApplication::translate("systemMonitor", "MemoryUsageCurve", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("systemMonitor", "MemoryUsageCurve", Q_NULLPTR));
     } // retranslateUi
 
 };
