@@ -15,7 +15,7 @@ union semun{
     int val;
     struct semid_ds* buf;
     unsigned short* array;
-    struct seminfo* _buf;
+    struct seminfo* __buf;
 };
 
 union semun arg;
@@ -54,26 +54,29 @@ int main(int argc, char *argv[])
        cout << "semget error!" <<'\n';
        return 1;
    }
-   for(int i = 0 ; i < 4 ; ++i){
-       if(i % 2 == 0) arg.val = 1;
-       else arg.val = 0;
-       if(semctl(semid , i , SETVAL , arg) < 0){
-           cout << "semctl error!" <<endl;
-           return 1;
-       }
-   }
+   arg.val = 1;
+   semctl(semid , 0 , SETVAL , arg);
+   arg.val = 0;
+   semctl(semid , 1 , SETVAL , arg);
+   arg.val = 1;
+   semctl(semid , 2 , SETVAL , arg);
+   arg.val = 0;
+   semctl(semid , 3 , SETVAL , arg);
    for(int i = 0 ; i < N ; ++i){
-       bufGet[i] = '#';
-       bufPut[i] = '#';
+       bufGet[i] = '.';
+       bufPut[i] = '.';
    }
+   bufGet[N] = 0;
+   bufPut[N] = 0;
    //QApplication a(argc , argv);
    if(fork()== 0){
        //cout << "child 1 start " <<endl;
        QApplication a(argc , argv);
-       Process process(nullptr , 600 , 400 , N);
+       Process process(nullptr , 200 , 400 , N);
        process.setWindowTitle("Read from file");
        process.mySetText("current data:");
        process.setSemid(semid);
+       process.change(QString(bufPut));
        process.show();
        QTimer* timer = new QTimer();
        Process::connect(timer , &QTimer::timeout , &process , &Process::updateProduct);
@@ -83,8 +86,8 @@ int main(int argc, char *argv[])
    else if(fork() == 0){
        //cout << "child 2 start " <<endl;
         QApplication a(argc , argv);
-        Process process(nullptr , 900 , 400 , N);
-        process.setWindowTitle("Put data to bufGet");
+        Process process(nullptr , 600 , 400 , N);
+        process.setWindowTitle("Put data to bufPut");
         process.mySetText("Put Data:");
         process.setSemid(semid);
         process.change(QString(bufPut));
@@ -97,8 +100,8 @@ int main(int argc, char *argv[])
    else if(fork() == 0){
        //cout << "child 3 start " <<endl;
        QApplication a(argc , argv);
-       Process process(nullptr , 1200 , 400 , N);
-       process.setWindowTitle("Get data from bufPut");
+       Process process(nullptr , 1000 , 400 , N);
+       process.setWindowTitle("Get data from bufGet");
        process.mySetText("Get Data:");
        process.setSemid(semid);
        process.change(QString(bufGet));
@@ -108,6 +111,6 @@ int main(int argc, char *argv[])
        timer->start(3000);
        return a.exec();
    }
-   semctl(semid , 4 , IPC_RMID , arg);
-    return 0;
+   //semctl(semid , 4 , IPC_RMID , arg);
+   return 0;
 }

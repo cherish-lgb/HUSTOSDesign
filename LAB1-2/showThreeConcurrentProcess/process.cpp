@@ -48,20 +48,20 @@ void Process::setSemid(int semid){
 
 void Process::updateProduct(){
    std::cout << semid << std::endl;
+   P(semid , 0);
+   sleep(1);
    QString str;
    for(int i = 0 ; i < N ; ++i){
-    idx = (idx + p) % 26;
     char ch = 'a' + idx;
     str.append(ch);
-    p = (p * 2) % 26;
-    if(p == 0) p = 1;
    }
+   idx = (idx + 1) % 26;
    change(str);
    std::cout << str.toStdString()<< std::endl;
    std::cout << bufPut << std::endl;
-   P(semid , 0);
    for(int i = 0 ; i < N ; ++i) bufPut[i] = str.at(i).unicode();
    change(str);
+   sleep(1);
    V(semid , 1);
    return ;
 }
@@ -69,6 +69,7 @@ void Process::updatePut(){
     std::cout << semid << std::endl;
     P(semid , 1);
     P(semid , 2);
+    sleep(1);
     QString str;
     for(int i = 0 ; i < N ; ++i){
         str.append(bufPut[i]);
@@ -76,6 +77,7 @@ void Process::updatePut(){
     }
     std::cout << bufGet << std::endl;
     change(str);
+    sleep(1);
     V(semid , 0);
     V(semid , 3);
     sleep(0);
@@ -85,11 +87,13 @@ void Process::updatePut(){
 void Process::updateGet(){
     std::cout << semid << std::endl;
     P(semid , 3);
+    sleep(1);
     QString str;
     for(int i = 0 ; i < N ; ++i){
         str.append(bufGet[i]);
     }
     change(str);
+    sleep(1);
     V(semid , 2);
     return ;
 }
